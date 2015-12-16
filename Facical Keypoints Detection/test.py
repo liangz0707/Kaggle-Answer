@@ -10,20 +10,22 @@ import datetime
 
 import os
 FLOOKUP = 'IdLookupTable.csv'
-def plot_sample(x, y, axis,y_true):
+def plot_sample(x, y, axis,y_true=None):
     img = x.reshape(96, 96)
     axis.imshow(img, cmap='gray')
     axis.scatter(y[0::2] * 48 + 48, y[1::2] * 48 + 48, c='b',marker='x', s=10)
-    axis.scatter(y_true[0::2] * 48 + 48, y_true[1::2] * 48 + 48,c='r', marker='x', s=10)
-'''
-#f1 = open('net1.pickle', 'r')
+    if y_true !=None:
+        axis.scatter(y_true[0::2] * 48 + 48, y_true[1::2] * 48 + 48,c='r', marker='x', s=10)
+
+f1 = open('net1.pickle', 'r')
 f2 = open('net2.pickle', 'r')
 
-#net1 = pickle.load(f1)
+net1 = pickle.load(f1)
 net2 = pickle.load(f2)
 
-#X1,y1 = load()
-X2 = load2d(test=True)
+X1,y1 = load()
+X2,y2 = load2d()
+#X2 = load2d(test=True)
 
 sample1,y_true1 = X1[6:7],y1[6]
 sample2,y_true2 = X2[6:7],y2[6]
@@ -36,12 +38,11 @@ ax = fig.add_subplot(1, 2, 1, xticks=[], yticks=[])
 
 plot_sample(sample1[0], y_pred1, ax,y_true1)
 
-ax = fig.add_subplot(2, 2, 2, xticks=[], yticks=[])
+ax = fig.add_subplot(1, 2, 2, xticks=[], yticks=[])
 
-plot_sample(sample2[0], y_pred2, ax,y_true2)
+plot_sample(sample1[0], y_pred2, ax,y_true2)
 
 plt.show()
-'''
 
 
 def predict(fname_specialists='net2.pickle'):
@@ -65,7 +66,6 @@ def predict(fname_specialists='net2.pickle'):
                 row.RowId,
                 y_pred2[int(row.ImageId)-1][int(row.RowId)%30-1]
                 ))
-
 
 
         submission = DataFrame(values, columns=('RowId','Location'))
